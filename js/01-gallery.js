@@ -27,28 +27,21 @@ function onClick(evt) {
 
     const imgId = evt.target.dataset.source;
     const currentItem = galleryItems.find(({ original }) => original === imgId);
-    
-    const instance = basicLightbox.create(`
-    <img src="${currentItem.original}" width="800" height="600">`)
+
+
+    const html = `<img src="${currentItem.original}" width="800" height="600">`;
+
+    const instance = basicLightbox.create(html, {
+        onShow: () => { window.addEventListener('keydown', onEscPress) },
+        onClose: () => { window.removeEventListener('keydown', onEscPress) }
+    });
 
     instance.show();
-
-    window.addEventListener('keydown', onEscPress);
-
+    
     function onEscPress(evt) {
-        const visibleModal = instance.visible();
-
+      
         if (evt.code === 'Escape') {
             instance.close();
         }
-        if (!visibleModal) {
-            window.removeEventListener('keydown', onEscPress);
-        }
-        
-        console.log(evt.code);
-
     }
-
-
 }
-
